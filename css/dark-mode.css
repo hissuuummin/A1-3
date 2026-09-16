@@ -1,0 +1,75 @@
+/* ==========================================================================
+   TripSpark - Dark Mode Stylesheet (CSS Theme Overrides)
+   ========================================================================== */
+
+body.dark-theme {
+  /* Colors - Dark Theme Overrides */
+  --text-main: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --bg-body: #090d16;
+  --bg-surface: #111827;
+  --bg-surface-elevated: #1f2937;
+  --bg-surface-alt: #0f172a;
+  
+  --border-color: #1e293b;
+  --border-focus: #60a5fa;
+  
+  --primary-light: rgba(37, 99, 235, 0.18);
+  --accent-light: rgba(245, 158, 11, 0.18);
+  
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-warning-bg: rgba(245, 158, 11, 0.15);
+  --color-error-bg: rgba(239, 68, 68, 0.15);
+  --color-info-bg: rgba(14, 165, 233, 0.15);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+}
+
+/* Dark mode specific adjustments */
+body.dark-theme .navbar {
+  background: rgba(17, 24, 39, 0.88);
+}
+
+body.dark-theme .select-control {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+body.dark-theme .hero-section {
+  background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+}
+
+body.dark-theme .info-banner {
+  background: rgba(134, 25, 143, 0.15);
+  border-color: rgba(240, 171, 252, 0.3);
+  color: #f0abfc;
+}
+
+body.dark-theme .alert-box.alert-error {
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+body.dark-theme .alert-box.alert-warning {
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+body.dark-theme .alert-box.alert-info {
+  color: #7dd3fc;
+  border-color: rgba(14, 165, 233, 0.4);
+}
+
+body.dark-theme .tip-box {
+  color: #fcd34d;
+}
+
+body.dark-theme .toast {
+  background: #1f2937;
+  color: #f1f5f9;
+  border: 1px solid var(--border-color);
+}

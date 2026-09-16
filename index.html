@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TripSpark | AI 맞춤 여행 일정 & 경비 플래너</title>
+  <meta name="description" content="단 30초 만에 완성하는 나만의 맞춤형 여행 코스! 취향, 동행자, 예산에 맞춘 최적의 일정과 경비 분배를 AI가 제안합니다.">
+  
+  <!-- Favicon (SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+  
+  <!-- Web Fonts (Preconnect & Google Fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dark-mode.css">
+</head>
+<body>
+
+  <!-- ==================== HEADER / NAVIGATION ==================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="brand-logo">
+        <span class="logo-icon">✨</span>
+        <span class="logo-text">Trip<strong>Spark</strong></span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li><a href="#hero" class="nav-link active">홈</a></li>
+          <li><a href="#planner" class="nav-link">AI 플래너</a></li>
+          <li><a href="#featured" class="nav-link">추천 여행지</a></li>
+          <li><a href="#guide" class="nav-link">이용 방법</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
+      </nav>
+
+      <!-- Utility Actions -->
+      <div class="nav-actions">
+        <!-- Storage Button (보너스 과제: 보관함) -->
+        <button type="button" class="btn-icon" id="savedPlansBtn" title="최근 저장한 플랜" aria-label="최근 저장한 플랜 열기">
+          <span class="icon">📂</span>
+          <span class="badge" id="savedCountBadge">0</span>
+        </button>
+
+        <!-- Dark Mode Toggle Button (보너스 과제) -->
+        <button type="button" class="btn-icon theme-toggle" id="themeToggleBtn" title="다크 모드 전환" aria-label="다크 모드 전환">
+          <span class="icon" id="themeIcon">🌙</span>
+        </button>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button type="button" class="btn-icon mobile-menu-toggle" id="mobileMenuBtn" aria-label="모바일 메뉴 열기">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="section hero-section" id="hero">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>Next-Gen AI Travel Concierge</span>
+        </div>
+        <h1 class="hero-title">
+          생각만 하던 여행,<br>
+          <span class="gradient-text">AI가 30초 만에 완벽한 일정</span>으로 만듭니다
+        </h1>
+        <p class="hero-desc">
+          수많은 블로그 검색과 복잡한 동선 고민은 이제 그만두세요.<br class="hide-mobile">
+          여행지, 동행자, 스타일, 예산만 알려주시면 시간대별 최적 코스와 경비 분배를 원스톱으로 제안합니다.
+        </p>
+
+        <div class="hero-cta-group">
+          <a href="#planner" class="btn btn-primary btn-lg">
+            <span>✨ AI 맞춤 일정 만들기</span>
+          </a>
+          <a href="#featured" class="btn btn-secondary btn-lg">
+            <span>인기 코스 둘러보기</span>
+          </a>
+        </div>
+
+        <!-- Trust Features / Key Metrics -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">무료 맞춤 생성</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">30초</div>
+            <div class="stat-label">초고속 플랜 완성</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-num">동선+경비</div>
+            <div class="stat-label">원스톱 분석 제공</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== AI PLANNER SECTION (CORE FEATURE) ==================== -->
+  <section class="section planner-section" id="planner">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-subtitle">CUSTOM TRIP GENERATOR</span>
+        <h2 class="section-title">나만의 맞춤 여행 계획 생성</h2>
+        <p class="section-desc">원하는 조건을 선택하시면 인공지능이 최적의 시간표와 동선을 즉시 설계해 드립니다.</p>
+      </div>
+
+      <div class="planner-card">
+        <!-- Input Form -->
+        <form id="travelForm" class="planner-form" novalidate>
+          
+          <!-- Field 1: Destination -->
+          <div class="form-group">
+            <label for="destinationInput" class="form-label">
+              <span class="label-icon">📍</span> 어디로 떠나시나요? <span class="required">*</span>
+            </label>
+            <div class="input-with-clear">
+              <input 
+                type="text" 
+                id="destinationInput" 
+                name="destination" 
+                class="form-control" 
+                placeholder="예: 제주도, 강릉, 부산, 경주, 도쿄 등" 
+                autocomplete="off"
+                required
+              >
+            </div>
+            <!-- Quick Chips -->
+            <div class="chips-container">
+              <span class="chips-label">인기 추천:</span>
+              <button type="button" class="chip-btn" data-dest="제주도">🌴 제주도</button>
+              <button type="button" class="chip-btn" data-dest="강릉/속초">🌊 강릉·속초</button>
+              <button type="button" class="chip-btn" data-dest="부산">🏙️ 부산</button>
+              <button type="button" class="chip-btn" data-dest="경주">🏛️ 경주</button>
+              <button type="button" class="chip-btn" data-dest="도쿄">🗼 도쿄</button>
+            </div>
+          </div>
+
+          <!-- 2-Column Grid for Duration & Travelers -->
+          <div class="form-grid-2">
+            <!-- Field 2: Duration -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="label-icon">🗓️</span> 여행 기간 <span class="required">*</span>
+              </label>
+              <div class="radio-pill-group" id="durationGroup">
+                <label class="radio-pill">
+                  <input type="radio" name="duration" value="당일치기">
+                  <span>당일치기</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="duration" value="1박 2일" checked>
+                  <span>1박 2일</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="duration" value="2박 3일">
+                  <span>2박 3일</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="duration" value="3박 4일">
+                  <span>3박 4일 이상</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Field 3: Travelers -->
+            <div class="form-group">
+              <label class="form-label">
+                <span class="label-icon">👥</span> 누구와 함께 가나요? <span class="required">*</span>
+              </label>
+              <div class="radio-pill-group" id="travelersGroup">
+                <label class="radio-pill">
+                  <input type="radio" name="travelers" value="혼자서 (나홀로 여행)">
+                  <span>혼자서 🎒</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="travelers" value="연인·커플과 함께" checked>
+                  <span>연인·커플 💑</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="travelers" value="친구들과 함께">
+                  <span>친구들과 🧑‍🤝‍🧑</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="travelers" value="가족(아이/부모님)과 함께">
+                  <span>가족과 👨‍👩‍👧</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field 4: Travel Theme (Checkboxes) -->
+          <div class="form-group">
+            <label class="form-label">
+              <span class="label-icon">🎨</span> 선호하는 여행 테마 <span class="label-hint">(다중 선택 가능)</span>
+            </label>
+            <div class="checkbox-tag-group" id="themeGroup">
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="힐링/자연" checked>
+                <span>🌿 힐링/자연</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="맛집 투어" checked>
+                <span>🍽️ 로컬 맛집</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="감성 카페">
+                <span>☕ 감성 카페</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="핫플레이스/포토존">
+                <span>📸 핫플/포토존</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="액티비티/체험">
+                <span>🏄 액티비티</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="역사/문화 유적">
+                <span>🏛️ 역사/문화</span>
+              </label>
+              <label class="checkbox-tag">
+                <input type="checkbox" name="theme" value="쇼핑/소품샵">
+                <span>🛍️ 쇼핑/소품샵</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 2-Column Grid for Budget & Notes -->
+          <div class="form-grid-2">
+            <!-- Field 5: Budget -->
+            <div class="form-group">
+              <label for="budgetSelect" class="form-label">
+                <span class="label-icon">💰</span> 1인당 예상 예산
+              </label>
+              <select id="budgetSelect" name="budget" class="form-control select-control">
+                <option value="1인 10만원 이하 (초가성비 뚜벅이)">1인 10만원 이하 (초가성비 뚜벅이)</option>
+                <option value="1인 15~25만원 (알뜰 실속형)" selected>1인 15~25만원 (알뜰 실속형)</option>
+                <option value="1인 30~50만원 (여유로운 힐링형)">1인 30~50만원 (여유로운 힐링형)</option>
+                <option value="1인 50만원 이상 (럭셔리 호캉스/플렉스)">1인 50만원 이상 (럭셔리 호캉스)</option>
+              </select>
+            </div>
+
+            <!-- Field 6: Special Notes -->
+            <div class="form-group">
+              <label for="notesInput" class="form-label">
+                <span class="label-icon">📝</span> 특별 요청사항 <span class="label-hint">(선택사항)</span>
+              </label>
+              <input 
+                type="text" 
+                id="notesInput" 
+                name="notes" 
+                class="form-control" 
+                placeholder="예: 뚜벅이 대중교통 이동, 오션뷰 숙소 희망 등"
+              >
+            </div>
+          </div>
+
+          <!-- Form Submit Actions -->
+          <div class="form-actions">
+            <button type="button" id="resetBtn" class="btn btn-outline">
+              <span>초기화</span>
+            </button>
+            <button type="submit" id="submitBtn" class="btn btn-primary btn-submit">
+              <span class="btn-text">✨ AI 맞춤 여행 일정 생성하기</span>
+              <span class="btn-spinner" style="display: none;"></span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- ================= UX Feedback / Alerts Container ================= -->
+        <div id="alertContainer" class="alert-container" style="display: none;">
+          <div class="alert-box" id="alertBox">
+            <span class="alert-icon" id="alertIcon">⚠️</span>
+            <div class="alert-content">
+              <div class="alert-title" id="alertTitle">안내</div>
+              <div class="alert-message" id="alertMessage"></div>
+            </div>
+            <button type="button" class="alert-close" id="alertCloseBtn" aria-label="닫기">✕</button>
+          </div>
+        </div>
+
+        <!-- ================= Loading State UI ================= -->
+        <div id="loadingContainer" class="loading-container" style="display: none;">
+          <div class="loading-spinner-wrapper">
+            <div class="pulsing-circle"></div>
+            <div class="loading-plane">✈️</div>
+          </div>
+          <h3 class="loading-title">AI 플래너가 여행 일정을 생성하고 있습니다</h3>
+          <p class="loading-desc" id="loadingProgressText">목적지 정보와 동선을 분석 중입니다...</p>
+          <div class="loading-progress-bar">
+            <div class="loading-progress-fill" id="progressBar"></div>
+          </div>
+          <p class="loading-hint" id="loadingDelayHint" style="display: none;">
+            ⏳ AI 연동으로 인해 응답까지 약 5~15초 정도 소요될 수 있습니다. 잠시만 기다려주세요.
+          </p>
+        </div>
+
+        <!-- ================= Result Display Container ================= -->
+        <div id="resultContainer" class="result-container" style="display: none;">
+          
+          <!-- Mock / Notification Banner -->
+          <div id="mockBanner" class="info-banner" style="display: none;">
+            <span class="banner-icon">💡</span>
+            <span class="banner-text" id="mockBannerText">스마트 시뮬레이션 모드로 생성되었습니다. Vercel 환경 변수 등록 시 실시간 AI로 전환됩니다.</span>
+          </div>
+
+          <!-- Result Header -->
+          <div class="result-header">
+            <div class="result-badge-row">
+              <span class="tag-pill tag-dest" id="resultDestTag">📍 제주도</span>
+              <span class="tag-pill tag-duration" id="resultDurationTag">🗓️ 1박 2일</span>
+              <span class="tag-pill tag-travelers" id="resultTravelersTag">👥 연인과 함께</span>
+              <span class="tag-pill tag-budget" id="resultBudgetTag">💰 알뜰 실속형</span>
+            </div>
+            <h3 class="result-title" id="resultTitle">✨ 제주도 1박 2일 맞춤 여행 코스</h3>
+            <p class="result-summary" id="resultSummary"></p>
+          </div>
+
+          <!-- Itinerary Days (Timeline) -->
+          <div class="itinerary-timeline" id="timelineContainer">
+            <!-- Dynamically populated via JavaScript -->
+          </div>
+
+          <!-- Budget Breakdown & Checklist Grid -->
+          <div class="result-details-grid">
+            <!-- Budget Card -->
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <span class="card-icon">💳</span>
+                <h4>예상 지출 분석</h4>
+              </div>
+              <div class="budget-list" id="budgetList">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Packing Checklist Card -->
+            <div class="detail-card">
+              <div class="detail-card-header">
+                <span class="card-icon">🎒</span>
+                <h4>추천 준비물 체크리스트</h4>
+              </div>
+              <ul class="checklist-items" id="checklistItems">
+                <!-- Dynamically populated with interactive checkboxes -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- AI Special Advice -->
+          <div class="advice-card" id="adviceCard">
+            <div class="advice-icon">💡</div>
+            <div class="advice-body">
+              <div class="advice-title">AI 여행 컨시어지 조언</div>
+              <p class="advice-text" id="adviceText"></p>
+            </div>
+          </div>
+
+          <!-- Action Buttons Bar -->
+          <div class="result-actions">
+            <button type="button" class="btn btn-outline" id="copyResultBtn">
+              <span>📋 전체 일정 복사</span>
+            </button>
+            <button type="button" class="btn btn-outline" id="saveResultBtn">
+              <span>💾 내 보관함에 저장</span>
+            </button>
+            <button type="button" class="btn btn-outline" id="printResultBtn">
+              <span>🖨️ 일정 인쇄 / PDF</span>
+            </button>
+            <button type="button" class="btn btn-primary" id="regenerateBtn">
+              <span>🔄 다른 일정 생성하기</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FEATURED TRIPS SECTION ==================== -->
+  <section class="section featured-section" id="featured">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-subtitle">POPULAR DESTINATIONS</span>
+        <h2 class="section-title">여행자들이 가장 사랑하는 추천 코스</h2>
+        <p class="section-desc">원클릭으로 인기 여행지의 조건을 불러와 나만의 맞춤 일정으로 재가공해보세요.</p>
+      </div>
+
+      <div class="featured-grid">
+        <!-- Card 1: Jeju -->
+        <div class="featured-card">
+          <div class="card-img-wrapper">
+            <div class="card-badge">인기 1위</div>
+            <div class="card-img-placeholder jeju-bg">
+              <span class="card-emoji">🌴</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">제주 에메랄드빛 힐링 여행</h3>
+            <p class="card-desc">애월 해안도로 드라이브, 감성 오션뷰 카페와 싱싱한 딱새우회 맛집 탐방 코스</p>
+            <div class="card-tags">
+              <span class="mini-tag">1박 2일</span>
+              <span class="mini-tag">힐링/자연</span>
+              <span class="mini-tag">오션뷰</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-block apply-preset-btn" 
+              data-dest="제주도" 
+              data-duration="1박 2일" 
+              data-travelers="연인·커플과 함께" 
+              data-theme="힐링/자연,맛집 투어,감성 카페"
+              data-budget="1인 15~25만원 (알뜰 실속형)"
+              data-notes="바다가 보이는 오션뷰 카페 필수">
+              이 코스로 일정 만들기 →
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2: Gangneung -->
+        <div class="featured-card">
+          <div class="card-img-wrapper">
+            <div class="card-badge">감성 추천</div>
+            <div class="card-img-placeholder gangneung-bg">
+              <span class="card-emoji">🌊</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">강릉 안목해변 & 커피거리 투어</h3>
+            <p class="card-desc">KTX 뚜벅이 여행자를 위한 초당순두부 젤라또, 감성 소품샵 투어와 바다 산책</p>
+            <div class="card-tags">
+              <span class="mini-tag">당일치기</span>
+              <span class="mini-tag">뚜벅이</span>
+              <span class="mini-tag">카페거리</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-block apply-preset-btn"
+              data-dest="강릉" 
+              data-duration="당일치기" 
+              data-travelers="친구들과 함께" 
+              data-theme="감성 카페,맛집 투어,쇼핑/소품샵"
+              data-budget="1인 10만원 이하 (초가성비 뚜벅이)"
+              data-notes="KTX 대중교통 뚜벅이 일정">
+              이 코스로 일정 만들기 →
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Busan -->
+        <div class="featured-card">
+          <div class="card-img-wrapper">
+            <div class="card-badge">야경 명소</div>
+            <div class="card-img-placeholder busan-bg">
+              <span class="card-emoji">🏙️</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">부산 광안리 야경 & 미식 로드</h3>
+            <p class="card-desc">광안대교 드론쇼, 흰여울문화마을 골목 탐방과 해운대 포장마차 감성 디너</p>
+            <div class="card-tags">
+              <span class="mini-tag">2박 3일</span>
+              <span class="mini-tag">야경</span>
+              <span class="mini-tag">포토존</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-block apply-preset-btn"
+              data-dest="부산" 
+              data-duration="2박 3일" 
+              data-travelers="연인·커플과 함께" 
+              data-theme="핫플레이스/포토존,맛집 투어,힐링/자연"
+              data-budget="1인 30~50만원 (여유로운 힐링형)"
+              data-notes="광안대교 야경 감상 명소 포함">
+              이 코스로 일정 만들기 →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS SECTION ==================== -->
+  <section class="section guide-section" id="guide">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-subtitle">HOW IT WORKS</span>
+        <h2 class="section-title">트립스파크는 어떻게 작동하나요?</h2>
+        <p class="section-desc">복잡한 절차 없이 3단계만으로 누구나 손쉽게 고품질 여행 계획을 완성합니다.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <div class="step-icon">📝</div>
+          <h3 class="step-title">여행 정보 입력</h3>
+          <p class="step-desc">목적지, 동행자, 기간, 취향 테마와 예산을 선택하여 본인만의 여행 스타일을 정의합니다.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <div class="step-icon">⚡</div>
+          <h3 class="step-title">AI 엔진 실시간 분석</h3>
+          <p class="step-desc">Vercel Serverless 백엔드가 최신 AI 모델을 호출하여 지리적 동선 최적화 및 시간대별 일정을 계산합니다.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <div class="step-icon">🎯</div>
+          <h3 class="step-title">스마트 일정표 수령</h3>
+          <p class="step-desc">완성된 시간표, 예상 지출 도표, 짐 싸기 체크리스트를 확인하고 원클릭으로 복사하거나 저장합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ SECTION ==================== -->
+  <section class="section faq-section" id="faq">
+    <div class="container max-w-md">
+      <div class="section-header text-center">
+        <span class="section-subtitle">FREQUENTLY ASKED QUESTIONS</span>
+        <h2 class="section-title">자주 묻는 질문</h2>
+        <p class="section-desc">서비스 이용 및 기술적 배경에 대해 궁금한 점을 확인하세요.</p>
+      </div>
+
+      <div class="accordion" id="faqAccordion">
+        <!-- Item 1 -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header" aria-expanded="false">
+            <span class="accordion-title">서비스 이용 요금이 발생하나요?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>트립스파크는 누구나 무료로 이용할 수 있는 웹 서비스입니다. 별도의 회원가입 없이 바로 여행 일정을 생성해보실 수 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header" aria-expanded="false">
+            <span class="accordion-title">AI가 만든 일정은 어떻게 동작하나요?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>사용자가 입력한 정보는 프론트엔드에서 JavaScript의 <code>fetch</code>를 통해 백엔드(Vercel Serverless Functions)로 안전하게 전달되며, AI 모델이 지리적 동선과 추천 시간대를 고려하여 구조화된 JSON 데이터로 일정을 생성해 화면에 렌더링합니다.</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header" aria-expanded="false">
+            <span class="accordion-title">API 키는 어떻게 안전하게 관리되나요?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>보안 강화를 위해 OpenAI 및 Gemini API 키는 프론트엔드 코드나 깃허브 저장소에 절대 노출되지 않습니다. Vercel의 안전한 서버리스 환경 변수(Environment Variables) 시스템을 통해 백엔드 파이썬 런타임에서만 은닉되어 처리됩니다.</p>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="accordion-item">
+          <button type="button" class="accordion-header" aria-expanded="false">
+            <span class="accordion-title">생성된 일정은 저장할 수 있나요?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>네! [전체 일정 복사] 버튼으로 카카오톡이나 메모장에 즉시 붙여넣을 수 있으며, [내 보관함에 저장]을 누르면 브라우저의 로컬 스토리지에 안전하게 보관되어 상단 폴더 아이콘을 통해 언제든 다시 열람할 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SAVED PLANS MODAL (BONUS FEATURE) ==================== -->
+  <div class="modal-overlay" id="savedModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">📂 내가 저장한 여행 플랜</h3>
+        <button type="button" class="modal-close" id="modalCloseBtn" aria-label="닫기">✕</button>
+      </div>
+      <div class="modal-body" id="savedPlansList">
+        <div class="empty-state">
+          <p>아직 저장된 여행 플랜이 없습니다.</p>
+          <p class="empty-sub">AI 플래너에서 일정을 만든 후 '내 보관함에 저장'을 눌러보세요!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo">
+          <span class="logo-icon">✨</span>
+          <span class="logo-text">Trip<strong>Spark</strong></span>
+        </div>
+        <p class="footer-desc">
+          바쁜 당신을 위한 AI 여행 플래너. 복잡한 검색 없이 최적의 코스를 완성하세요.
+        </p>
+        <div class="footer-tags">
+          <span class="badge-tech">HTML5 / CSS3 / Vanilla JS</span>
+          <span class="badge-tech">Vercel Serverless (Python)</span>
+          <span class="badge-tech">AI API Powered</span>
+        </div>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>바로가기</h4>
+          <ul>
+            <li><a href="#hero">홈</a></li>
+            <li><a href="#planner">AI 플래너</a></li>
+            <li><a href="#featured">추천 여행지</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>프로젝트 정보</h4>
+          <ul>
+            <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub 저장소</a></li>
+            <li><a href="#planner">AI 서비스 체험</a></li>
+            <li><a href="#guide">기술 아키텍처</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="container bottom-container">
+        <p>© 2026 TripSpark. All rights reserved. Built with AI & Web Standards.</p>
+        <p class="disclaimer">본 서비스에서 제공하는 여행 일정 및 예산 정보는 AI 추정치이므로 현지 사정에 따라 달라질 수 있습니다.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
