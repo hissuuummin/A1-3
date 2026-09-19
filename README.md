@@ -9,7 +9,7 @@
 ## 🔗 배포 및 서비스 접속 (Live Demo)
 
 - **배포 URL**: `https://your-tripspark-project.vercel.app` *(Vercel 배포 후 생성된 URL을 입력하세요)*
-- **GitHub 저장소**: `https://github.com/your-username/tripspark`
+- **GitHub 저장소**: `https://github.com/hissuuummin/A1-3`
 
 ---
 
@@ -81,8 +81,8 @@ tripspark/
 
 ### 1) 저장소 클론 및 이동
 ```bash
-git clone https://github.com/your-username/tripspark.git
-cd tripspark
+git clone https://github.com/hissuuummin/A1-3.git
+cd A1-3
 ```
 
 ### 2) 환경 변수 설정 (선택 사항)
@@ -100,7 +100,7 @@ OPENAI_API_KEY=sk-proj-xxxx...
 ```bash
 python dev_server.py
 ```
-서버가 구동되면 웹 브라우저에서 **`http://localhost:3000`** 으로 접속합니다.
+서버가 구동되면 웹 브라우저에서 **`http://localhost:8080`** 으로 접속합니다.
 
 ---
 
