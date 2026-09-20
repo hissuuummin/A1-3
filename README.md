@@ -8,7 +8,7 @@
 
 ## 🔗 배포 및 서비스 접속 (Live Demo)
 
-- **배포 URL**: `https://your-tripspark-project.vercel.app` *(Vercel 배포 후 생성된 URL을 입력하세요)*
+- **배포 URL**: `https://a1-3-sum25.vercel.app`
 - **GitHub 저장소**: `https://github.com/hissuuummin/A1-3`
 
 ---
