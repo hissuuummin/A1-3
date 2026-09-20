@@ -285,8 +285,8 @@ def call_gemini_api(api_key, destination, duration, travelers, theme, budget, no
   ],
   "ai_advice": "여행자를 위한 특별 맞춤 조언 (1~2줄)"
 }}
-"""
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+    gemini_model = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash").strip()
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={api_key}"
     headers = {"Content-Type": "application/json"}
     payload = {
         "contents": [{
