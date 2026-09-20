@@ -338,52 +338,14 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        """API 헬스체크 또는 정적 웹 파일 서빙"""
-        clean_path = self.path.split("?")[0].strip()
-        
-        # 1. API 헬스체크 요청
-        if clean_path in ("/api", "/api/", "/api/generate", "/api/generate/"):
-            res = {
-                "service": "TripSpark AI API",
-                "status": "online",
-                "usage": "POST /api/generate with JSON body"
-            }
-            self._send_json(res, 200)
-            return
-
-        # 2. 정적 웹 파일 (index.html, css, js 등) 서빙
-        file_subpath = clean_path.lstrip("/")
-        if not file_subpath:
-            file_subpath = "index.html"
-
-        # 프로젝트 루트 디렉토리 탐색
-        root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        target_file = os.path.join(root_dir, file_subpath)
-        if not os.path.isfile(target_file):
-            target_file = os.path.join(os.getcwd(), file_subpath)
-
-        if os.path.isfile(target_file):
-            import mimetypes
-            mime_type, _ = mimetypes.guess_type(target_file)
-            if not mime_type:
-                mime_type = "application/octet-stream"
-            try:
-                with open(target_file, "rb") as f:
-                    content = f.read()
-                self.send_response(200)
-                content_type = f"{mime_type}; charset=utf-8" if ("text" in mime_type or "javascript" in mime_type or "json" in mime_type) else mime_type
-                self.send_header("Content-Type", content_type)
-                self.send_header("Content-Length", str(len(content)))
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.end_headers()
-                self.wfile.write(content)
-                return
-            except Exception as e:
-                self._send_json({"error": f"Failed to read file: {str(e)}"}, 500)
-                return
-
-        # 파일이 없을 경우 404
-        self.send_error(404, f"File Not Found: {file_subpath}")
+        """API 헬스체크"""
+        res = {
+            "service": "TripSpark AI API",
+            "status": "online",
+            "model": os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite"),
+            "usage": "POST /api/generate with JSON body"
+        }
+        self._send_json(res, 200)
 
     def do_POST(self):
         """AI 여행 일정 생성 요청 처리"""
