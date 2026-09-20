@@ -88,13 +88,23 @@ const ApiService = {
           errorData = null;
         }
 
+        const extractErrorMessage = (data, defaultMsg) => {
+          if (!data) return defaultMsg;
+          if (typeof data.error === 'string') return data.error;
+          if (data.error && typeof data.error === 'object') {
+            return data.error.message || data.error.code || JSON.stringify(data.error);
+          }
+          if (typeof data.message === 'string') return data.message;
+          return defaultMsg;
+        };
+
         if (response.status === 400) {
-          const msg = (errorData && errorData.error) || '입력하신 요청 정보가 올바르지 않습니다. 확인 후 다시 시도해주세요.';
+          const msg = extractErrorMessage(errorData, '입력하신 요청 정보가 올바르지 않습니다. 확인 후 다시 시도해주세요.');
           throw new Error(`[입력 오류] ${msg}`);
         } else if (response.status === 429) {
           throw new Error('AI 서비스 사용량이 많아 호출 한도를 초과했습니다. 잠시 후 1~2분 뒤에 다시 시도해주세요.');
         } else if (response.status === 500 || response.status === 502) {
-          const msg = (errorData && errorData.error) || '서버 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+          const msg = extractErrorMessage(errorData, '서버 처리 중 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
           throw new Error(`[서버 오류] ${msg}`);
         } else if (response.status === 404) {
           // 로컬 정적 서버 등에서 /api/generate 가 서빙되지 않는 환경일 때 스마트 Fallback 지원
