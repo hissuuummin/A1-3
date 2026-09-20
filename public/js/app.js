@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. 필수값 사전 검증 (실패 처리 요구사항 #1: 빈 입력/필수값 누락)
     const validation = window.ApiService.validateInputs(payload);
     if (!validation.isValid) {
-      showAlert('error', '필수 입력값 누락', validation.message);
+      showAlert('error', '목적지 입력 확인', validation.message);
       destinationInput.focus();
       return;
     }

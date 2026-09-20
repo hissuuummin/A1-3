@@ -21,11 +21,31 @@ const ApiService = {
       };
     }
 
-    if (formData.destination.trim().length < 2) {
+    const dest = formData.destination.trim();
+    if (dest.length < 2) {
       return {
         isValid: false,
         field: 'destination',
         message: '목적지는 최소 2글자 이상 입력해주세요.'
+      };
+    }
+
+    // 한글 자음/모음만 연속 입력된 경우 (ㅋㅋㅋ, ㅎㅎㅎ 등)
+    if (/^[ㄱ-ㅎㅏ-ㅣ]+$/.test(dest)) {
+      return {
+        isValid: false,
+        field: 'destination',
+        message: `'${dest}'은(는) 올바른 지역명이 아닙니다. 실제 존재하는 도시나 지역명을 입력해주세요.`
+      };
+    }
+
+    // 명백한 테스트어 / 비여행 단어 필터링
+    const obviousInvalid = ['다인', '테스트', 'test', 'asdf', 'qwerty', '아무거나', '아무데나', '어딘가', '모름', '없음', '집', '우리집', '회사', '학교'];
+    if (obviousInvalid.includes(dest.toLowerCase())) {
+      return {
+        isValid: false,
+        field: 'destination',
+        message: `'${dest}'은(는) 실제 존재하는 여행지로 확인되지 않습니다. 올바른 도시나 지역명을 입력해주세요 (예: 제주도, 강릉, 부산, 경주, 도쿄 등).`
       };
     }
 
@@ -152,6 +172,10 @@ const ApiService = {
    * 끊김 없이 UI/UX 전체를 테스트할 수 있도록 제공하는 스마트 클라이언트 시뮬레이션
    */
   generateFallbackPlan(payload) {
+    const validation = this.validateInputs(payload);
+    if (!validation.isValid) {
+      throw new Error(`[입력 오류] ${validation.message}`);
+    }
     const themeStr = Array.isArray(payload.theme) ? payload.theme.join(', ') : payload.theme;
     return {
       success: true,
